@@ -12,3 +12,56 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Player {
+  id         Int         @id @default(autoincrement())
+  username   String      @unique
+  email      String      @unique
+  password   String
+  characters Character[]
+
+  @@map("player")
+}
+
+model Character {
+  id               Int    @id @default(autoincrement())
+  nickname         String @unique
+  level            Int    @default(1)
+  magicLevel       Int    @default(1)
+  swordFighting    Int    @default(10)
+  axeFighting      Int    @default(10)
+  clubFighting     Int    @default(10)
+  distanceFighting Int    @default(10)
+  shielding        Int    @default(10)
+  fistFighting     Int    @default(10)
+
+  vocation   Vocation @relation(fields: [vocationId], references: [id])
+  vocationId Int
+
+  world   World @relation(fields: [worldId], references: [id])
+  worldId Int
+
+  playerId Int
+  player   Player @relation(fields: [playerId], references: [id])
+
+  @@map("character")
+}
+
+model Vocation {
+  id         Int         @id @default(autoincrement())
+  name       String
+  characters Character[]
+
+  @@map("vocation")
+}
+
+model World {
+  id         Int         @id @default(autoincrement())
+  name       String
+  pvpType    String
+  capacity   Int
+  location   String
+  characters Character[]
+
+  @@map("world")
+}
